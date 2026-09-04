@@ -137,6 +137,9 @@ function AppInner() {
             emailConnected={profile?.email_connected || false}
             onNewAction={() => { setComposerKind('Devis'); setShowComposer(true); }}
             onGoOperator={() => setActiveNav('IA Operator')}
+            onGoSettings={() => setShowSettings(true)}
+            onGoDocuments={() => setActiveNav('Documents')}
+            onGoCalendar={() => setActiveNav('Calendrier')}
           />
         ) : (
           <SectionView activeNav={activeNav} documentList={documentList} onCreate={(kind) => { setComposerKind(kind); setShowComposer(true); }} />
@@ -160,7 +163,7 @@ function AppInner() {
   );
 }
 
-function Dashboard({ firstName, documentList, revenue, totalRevenue, aEncaisser, pendingCount, docCount, emailConnected, onNewAction, onGoOperator }: {
+function Dashboard({ firstName, documentList, revenue, totalRevenue, aEncaisser, pendingCount, docCount, emailConnected, onNewAction, onGoOperator, onGoSettings, onGoDocuments, onGoCalendar }: {
   firstName: string;
   documentList: DocumentItem[];
   revenue: RevenuePoint[];
@@ -171,6 +174,9 @@ function Dashboard({ firstName, documentList, revenue, totalRevenue, aEncaisser,
   emailConnected: boolean;
   onNewAction: () => void;
   onGoOperator: () => void;
+  onGoSettings: () => void;
+  onGoDocuments: () => void;
+  onGoCalendar: () => void;
 }) {
   const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }).toUpperCase();
   const hasData = docCount > 0 || revenue.length > 0;
@@ -194,7 +200,7 @@ function Dashboard({ firstName, documentList, revenue, totalRevenue, aEncaisser,
             <RevenueChart data={revenue} />
           </div>
           <div className="section-card agenda-card">
-            <div className="card-heading"><div><h3>Votre journ\u00e9e</h3><p>3 rendez-vous et 4 actions prioritaires</p></div><button className="text-action" onClick={() => setActiveNav('Calendrier')}>Voir le calendrier <ArrowUpRight size={13} /></button></div>
+            <div className="card-heading"><div><h3>Votre journ\u00e9e</h3><p>3 rendez-vous et 4 actions prioritaires</p></div><button className="text-action" onClick={onGoCalendar}>Voir le calendrier <ArrowUpRight size={13} /></button></div>
             <div className="agenda-item"><span className="agenda-time">09:30</span><div className="agenda-line"><i /></div><div className="agenda-content"><div><strong>Point strat\u00e9gie</strong><span>avec Camille Laurent</span></div><b className="tag tag-blue">Dans 25 min</b></div></div>
             <div className="agenda-item"><span className="agenda-time">13:00</span><div className="agenda-line"><i /></div><div className="agenda-content"><div><strong>Validation du devis</strong><span>avec Maison Rivi\u00e8re</span></div><b className="tag tag-grey">Google Meet</b></div></div>
             <div className="agenda-item"><span className="agenda-time">16:30</span><div className="agenda-line"><i /></div><div className="agenda-content"><div><strong>Focus cr\u00e9ation</strong><span>Bloc de temps personnel</span></div><b className="tag tag-grey">2h</b></div></div>
@@ -204,10 +210,10 @@ function Dashboard({ firstName, documentList, revenue, totalRevenue, aEncaisser,
             {emailConnected ? (
               <Attention icon="mail" title="V\u00e9rifier vos emails" detail="L\u2019op\u00e9rateur peut lire et trier vos messages" action="Ouvrir l\u2019op\u00e9rateur" onClick={onGoOperator} />
             ) : (
-              <Attention icon="mail" title="Connecter votre email" detail="Permettez \u00e0 l\u2019IA de g\u00e9rer vos emails" action="Voir les r\u00e9glages" onClick={() => {}} />
+              <Attention icon="mail" title="Connecter votre email" detail="Permettez \u00e0 l\u2019IA de g\u00e9rer vos emails" action="Voir les r\u00e9glages" onClick={onGoSettings} />
             )}
             {pendingCount > 0 && (
-              <Attention icon="file" title={`Relancer ${pendingCount} facture${pendingCount > 1 ? 's' : ''}`} detail="\u00c9ch\u00e9ance d\u00e9pass\u00e9e" action="Voir les factures" onClick={() => {}} />
+              <Attention icon="file" title={`Relancer ${pendingCount} facture${pendingCount > 1 ? 's' : ''}`} detail="\u00c9ch\u00e9ance d\u00e9pass\u00e9e" action="Voir les factures" onClick={onGoDocuments} />
             )}
             <Attention icon="spark" title="Pr\u00e9parer votre r\u00e9union" detail="Brief disponible pour le point de 13:00" action="Ouvrir le brief" onClick={onGoOperator} />
           </div>
@@ -220,7 +226,7 @@ function Dashboard({ firstName, documentList, revenue, totalRevenue, aEncaisser,
               <Bar label="Devis" value={formatCurrency(devis.reduce((s, d) => s + d.amount, 0))} width={`${devis.length > 0 ? Math.min((devis.length / Math.max(docCount, 1)) * 100, 100) : 0}%`} color="blue" />
               <Bar label="Factures" value={formatCurrency(factures.reduce((s, d) => s + d.amount, 0))} width={`${factures.length > 0 ? Math.min((factures.length / Math.max(docCount, 1)) * 100, 100) : 0}%`} color="orange" />
             </div>
-            <button className="wide-action" onClick={() => setActiveNav('Documents')}>Voir les documents <ArrowUpRight size={14} /></button>
+            <button className="wide-action" onClick={onGoDocuments}>Voir les documents <ArrowUpRight size={14} /></button>
           </div>
           <div className="section-card activity-card">
             <div className="card-heading"><div><h3>Activit\u00e9 r\u00e9cente</h3><p>Vos derniers documents</p></div></div>
