@@ -207,7 +207,7 @@ export function OperatorView({ onAction }: { onAction: (action: OperatorAction) 
           </form>
           {mode === 'speaking' && <button className="stop-voice" onClick={stopSession}>Arrêter</button>}
         </div>
-        <div className="voice-hint"><Mic size={14} /> {mode === 'listening' ? 'Parlez naturellement, je m\'occupe du reste.' : \'Votre voix reste privée et n'est pas enregistrée.'}</div>
+        <div className="voice-hint"><Mic size={14} /> {mode === 'listening' ? 'Parlez naturellement, je m\u2019occupe du reste.' : 'Votre voix reste privée et n\u2019est pas enregistrée.'}</div>
       </div>
     </div>
   );
